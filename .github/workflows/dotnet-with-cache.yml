@@ -18,7 +18,7 @@ jobs:
       id: cache-dotnet-core
       uses: actions/cache@v3
       with:
-        path: './usr/share/dotnet'
+        path: '~/usr/share/dotnet'
         key: ${{ runner.os }}-dotnet-3-1   
     
     - name: Setup .NET
