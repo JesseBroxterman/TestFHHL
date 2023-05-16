@@ -6,6 +6,10 @@ name: with cache
 on:
   workflow_dispatch
 
+env:
+    DOTNET_INSTALL_DIR: '.\.dotnet'
+    DOTNET_ROOT: '.\.dotnet'
+
 jobs:
   build:
 
