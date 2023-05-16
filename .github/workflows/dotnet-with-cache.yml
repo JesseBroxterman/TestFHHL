@@ -5,7 +5,11 @@ name: with cache
 
 on:
   workflow_dispatch
-
+  
+env:
+  DOTNET_INSTALL_DIR: '.\.dotnet'
+  DOTNET_ROOT: '.\.dotnet'
+      
 jobs:
   build:
 
@@ -18,7 +22,7 @@ jobs:
       id: cache-dotnet-core
       uses: actions/cache@v3
       with:
-        path: '~/usr/share/dotnet'
+        path: ${{ env.DOTNET_INSTALL_DIR }}
         key: ${{ runner.os }}-dotnet-3-1   
     
     - name: Setup .NET
