@@ -23,14 +23,13 @@ jobs:
       uses: actions/cache@v3
       with:
         path: '.\.dotnet'
-        key: ${{ runner.os }}-dotnet-6
-        restore-keys: ${{ runner.os }}-dotnet-6    
+        key: ${{ runner.os }}-dotnet-3-1   
     
     - name: Setup .NET
       if: steps.cache-dotnet-core.outputs.cache-hit != 'true'
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 3.1.x
                 
     - name: Restore dependencies
       run: dotnet restore FHHL/FHHL.sln
