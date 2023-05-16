@@ -20,6 +20,7 @@ jobs:
         dotnet-version: 3.1.x
         
     - uses: actions/cache@v3
+      id: cache-nuget
       with:
         path: ~/.nuget/packages
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
@@ -27,6 +28,7 @@ jobs:
           ${{ runner.os }}-nuget-
    
     - name: Restore dependencies
+      if: steps.cache-nuget.outputs.cache-hit != 'true'
       run: dotnet restore FHHL/FHHL.sln
       
     - name: Build
