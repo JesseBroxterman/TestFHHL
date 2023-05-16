@@ -1,0 +1,94 @@
+@model FHHL.Web.Models.Caregiver.EditViewModel
+@inject FHHL.BLL.Interfaces.IOptionsService optionsService
+@{
+    var races = await optionsService.GetRacesAsync();
+
+    ViewData["Title"] = "Edit Caregiver";
+}
+
+<main class="external-section-flex" style="max-width: 500px;">
+    <form method="post">
+        <div class="row">
+            <div class="col-12 mb-1 external-section-header">
+                Edit Caregiver
+            </div>
+            <div class="col-12">
+                <p class="text-center mb-0" style="font-size: 14px;">Fields marked with * are required.</p>
+            </div>
+        </div>
+        <hr style="margin-top: .5rem;" />
+        <div class="row">
+            <div class="col-12 d-flex flex-column">
+                <input type="hidden" asp-for="Id" />
+                <div class="form-group">
+                    <label asp-for="FirstName">First Name *</label>
+                    <input asp-for="FirstName" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName">Last Name *</label>
+                    <input asp-for="LastName" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="DateOfBirth">Date of Birth</label>
+                    <input type="text" asp-for="DateOfBirth" class="form-control datepicker" autocomplete="off" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="SelectedRaces">Race(s)</label>
+                    <select class="selectpicker form-control" asp-for="SelectedRaces" multiple>
+                        @foreach (var r in races.Where(r => r.ActiveFlag))
+                        {
+                            <option value="@r.Id">@r.Label</option>
+                        }
+                        @if (races.Any(x => x.ActiveFlag == false && Model.SelectedRaces.Contains(x.Id)))
+                        {
+                            <option data-divider="true"></option>
+                            @foreach (var r in races.Where(r => r.ActiveFlag == false))
+                            {
+                                if (Model.SelectedRaces.Contains(r.Id))
+                                {
+                                <option value="@r.Id"class="font-italic">@r.Label - Deactivated</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Zip"></label>
+                    <input type="number" asp-for="Zip" class="form-control" placeholder="_ _ _ _ _" />
+                    <span asp-validation-for="Zip"></span>
+                </div>
+
+                <div>
+                    <div class="form-group d-flex align-items-center justify-content-between">
+                        <label asp-for="MomClass" class="mb-0">Becoming a Mom Class</label>
+                        <label class="switch ml-3 mb-0">
+                            <input type="checkbox" asp-for="MomClass" class="primary" value="true">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+
+                    <div class="form-group d-flex align-items-center justify-content-between">
+                        <label asp-for="Spanish" class="mb-0"></label>
+                        <label class="switch ml-3 mb-0">
+                            <input type="checkbox" asp-for="Spanish" class="primary" value="true">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+
+                    <div class="form-group d-flex align-items-center justify-content-between">
+                        <label asp-for="Foster" class="mb-0"></label>
+                        <label class="switch ml-3 mb-0">
+                            <input type="checkbox" asp-for="Foster" class="primary" value="true">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="mt-1" />
+        <div class="d-flex justify-content-end align-items-center">
+            <a asp-controller="Caregiver" asp-action="Dashboard" asp-route-id="@Model.Id" class="btn btn-link">Cancel</a>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</main>

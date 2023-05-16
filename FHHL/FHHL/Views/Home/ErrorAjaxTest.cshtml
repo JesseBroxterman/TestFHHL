@@ -1,0 +1,20 @@
+﻿
+<button type="button" id="ajaxErrorButton">Generate AJAX Error</button>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#ajaxErrorButton").on("click", function () {
+                $.ajax({
+                    type: 'POST',
+                    accepts: "application/json",
+                    url: '@Url.Action("ErrorAjaxTestPost")'
+                }).done(function (result) {
+                    showAlert("alert-success", "", "You made an error!.");
+                }).fail(function (result) {
+                    showAlert("alert-danger", "", "There was a system error.");
+                });
+            });
+        });
+    </script>
+}

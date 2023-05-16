@@ -1,0 +1,15 @@
+{
+  "ServerUri": "https://sonarcloud.io/",
+  "Organization": {
+    "Key": "snco",
+    "Name": "Hydra"
+  },
+  "ProjectKey": "snco_family-health-hv-log",
+  "ProjectName": "Family Health HV Log",
+  "Profiles": {
+    "CSharp": {
+      "ProfileKey": "AXpY0u6XdL_jS25ld995",
+      "ProfileTimestamp": "2021-11-12T13:57:29Z"
+    }
+  }
+}

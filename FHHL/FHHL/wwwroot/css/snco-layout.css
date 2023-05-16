@@ -1,0 +1,28 @@
+﻿body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-width: 360px !important;
+    height: 100%;
+    width: 100%;
+    font-family: "Poppins", Arial, sans-serif;
+    position: relative;
+    color: #666;
+}
+
+.container {
+    min-width: 300px;
+}
+
+
+@media print {
+    .hidden-print               { display: none !important; }
+    .visible-print              { display: block !important; }    
+    .visible-print-block        { display: block !important; }
+    .visible-print-inline       { display: inline !important; }
+    .visible-print-inline-block { display: inline-block !important; }
+    table.visible-print         { display: table; }
+       tr.visible-print         { display: table-row !important; }
+       th.visible-print         { display: table-cell !important; }
+       td.visible-print         { display: table-cell !important; }
+}

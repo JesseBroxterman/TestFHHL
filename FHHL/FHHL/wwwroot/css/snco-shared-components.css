@@ -1,0 +1,312 @@
+﻿/*Form groups and controls*/
+.form-control:focus {
+    border-color: white;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: #337ab7 0px 0px 7px;
+}
+
+    .form-control:focus + .input-group-addon {
+        box-shadow: #337ab7 3px 0px 8px;
+    }
+
+/*#region Displaying a checkbox as a toggle switch */
+.onoffswitch {
+    position: relative;
+    width: 70px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.onoffswitch-checkbox {
+    display: none;
+}
+
+.onoffswitch-label {
+    display: block;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid #C2BEBE;
+    border-radius: 20px;
+}
+
+.onoffswitch-inner {
+    display: block;
+    width: 200%;
+    margin-left: -100%;
+    transition: margin 0.3s ease-in 0s;
+}
+
+    .onoffswitch-inner:before, .onoffswitch-inner:after {
+        display: block;
+        float: left;
+        width: 50%;
+        height: 30px;
+        padding: 0;
+        line-height: 30px;
+        font-size: 14px;
+        color: white;
+        font-family: Trebuchet, Arial, sans-serif;
+        font-weight: bold;
+        box-sizing: border-box;
+    }
+
+    .onoffswitch-inner:before {
+        content: "YES";
+        padding-left: 10px;
+        background-color: #1E2E3E;
+        color: #FFFFFF;
+    }
+
+    .onoffswitch-inner:after {
+        content: "NO";
+        padding-right: 10px;
+        background-color: #EEEEEE;
+        color: #999999;
+        text-align: right;
+    }
+
+.onoffswitch-switch {
+    display: block;
+    width: 18px;
+    margin: 6px;
+    background: #FAF2F2;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 56px;
+    border: 2px solid #C2BEBE;
+    border-radius: 20px;
+    transition: all 0.3s ease-in 0s;
+}
+
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+    margin-left: 0;
+}
+
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+    right: 0px;
+}
+/*#endregion */
+
+.input-group-addon {
+    color: white;
+    background-color: #146794;
+}
+
+/*#region Modals and modal components */
+.modal-footer p.delete-modal-footer {
+    font-weight: 700;
+    flex-grow: 1;
+}
+
+.modal-footer .edit-modal-footer:first-child {
+    flex-grow: 1;
+}
+
+@media (max-width: 767px){
+    .modal-dialog {
+        max-width: none;
+        margin: .5rem;
+
+        height: calc(100% - 1rem);
+        max-height: calc(100% - 1rem);
+    }
+
+    .modal-content {
+        max-height: calc(100vh - 1rem) !important;
+    }
+}
+
+.modal-header {
+    background-color: #007bff;
+    color: #fff;
+    align-items: center;
+}
+/*#endregion */
+
+/*#region table rules */
+.table {
+    color: #666;
+}
+
+    .table th {
+        font-size: 1.1rem;
+        text-align: center;
+    }
+
+.table-center th, .table-center td {
+    vertical-align: middle !important;
+}
+
+.table-scrolling {
+    overflow-x: auto;
+    margin-bottom: .5rem;
+}
+
+    .table-scrolling .table {
+        margin-bottom: 0 !important;
+    }
+
+/*#region .table-bordered adjustments */
+.table-bordered > thead:first-child > tr:first-child > th {
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+.table-bordered thead + tbody tr td,
+.table-bordered tfoot + tbody tr td,
+.table-bordered tfoot tr td,
+.table-bordered tbody + tbody tr td,
+.table-bordered tr + tr td {
+    border-top: 0;
+}
+
+.table-bordered tr th + th,
+.table-bordered tr td + td {
+    border-left: 0;
+}
+/*#endregion */
+
+/*#region .table-striped */
+
+.table-striped > thead > tr {
+    background-color: rgba(4, 104, 156, 0.92);
+    color: white;
+}
+
+.table-striped > tbody > tr:nth-of-type(2n+1) {
+    background-color: white;
+}
+
+.table-striped > tbody > tr:nth-of-type(2n) {
+    background-color: rgb(220, 240, 251);
+}
+
+/*#endregion */
+
+.table-highlight > tbody > tr:hover:not(.no-highlight),
+.table-highlight > tbody > tr:focus:not(.no-highlight) {
+    background-color: #c9ffc8 !important;
+    cursor: pointer;
+}
+/*#endregion */
+
+/*#region DataTables rules */
+table.dataTable thead th:focus {   /* fallback accessibility styling for browers */
+    border-color: white;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: inset #dcdcdc 0px 0px 7px;
+}
+
+div.dataTables_wrapper div.dataTables_info {
+    padding-top: 0;
+    white-space: normal;
+}
+
+@media (min-width:768px) and (max-width: 991px) {
+    li.paginate_button.previous {
+        display: list-item;
+    }
+
+    li.paginate_button.next {
+        display: list-item;
+    }
+
+    li.paginate_button.active {
+        display: list-item;
+    }
+
+    li.paginate_button {
+        display: none;
+    }
+}
+
+@media (max-width: 575px) {
+    li.paginate_button.previous {
+        display: list-item;
+    }
+
+    li.paginate_button.next {
+        display: list-item;
+    }
+
+    li.paginate_button.active {
+        display: list-item;
+    }
+
+    li.paginate_button {
+        display: none;
+    }
+}
+
+div.dataTables_wrapper div.dataTables_processing {
+    bottom: 0;
+    left: 15px;
+    top: 0;
+    margin-top: 0;
+    margin-left: 0;
+    height: 100%;
+    width: calc(100% - 30px);
+}
+
+table.dataTable thead > tr > th.sorting,
+table.dataTable thead > tr > th.sorting_asc,
+table.dataTable thead > tr > th.sorting_desc {
+    padding-right: 2rem;
+}
+
+    table.dataTable thead > tr > th.sorting:before,
+    table.dataTable thead > tr > th.sorting:after,
+    table.dataTable thead > tr > th.sorting_asc:before,
+    table.dataTable thead > tr > th.sorting_asc:after,
+    table.dataTable thead > tr > th.sorting_desc:before,
+    table.dataTable thead > tr > th.sorting_desc:after {
+        bottom: 50%;
+        transform: translateY(45%);
+    }
+/*#endregion */
+
+.tempalert {
+    cursor: pointer;
+}
+
+@media print {
+    /* Override Bootstrap to hide href on print */
+    a[href]:after {
+        content: none !important;
+    }
+
+    /* hide body and only display modal when open */
+    body.modal-open *, body.gsc-overflow-hidden * {
+        visibility: hidden;
+    }
+
+    .modal.in *, body.gsc-overflow-hidden #___gcse_1 * {
+        visibility: visible;
+    }
+
+    .popover.in, .popover.in * {
+        visibility: hidden !important;
+    }
+
+    button, .btn {
+        display: none !important;
+    }
+
+    .body-content {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+}
+
+
+.external-section-flex-full {
+    background: white;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .15), 0 1px 5px rgba(0, 0, 0, .2);
+    border: 3px solid rgb(231, 231, 231);
+    padding: 15px;
+    margin: 0px 0px 20px 0px;
+}

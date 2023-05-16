@@ -1,0 +1,168 @@
+﻿@model FHHL.Web.Models.Caregiver.DashboardViewModel
+@{
+    ViewData["Title"] = Model.FirstName + " " + Model.LastName + " Dashboard";
+}
+
+@section Head {
+    <style>
+        .external-section-flex-lg {
+            min-width: 700px;
+        }
+    </style>
+}
+
+<main class="external-section-flex-lg">
+    <div class="row external-section-header d-flex align-items-center flex-nowrap">
+        <div div class="col flex-grow-0" style="min-width: 70px;">
+            @if (User.IsInRole(Roles.Admin.ToString()))
+            {
+            @if (Model.DelFlag)
+            {
+            <form asp-action="Restore" asp-controller="Caregiver" method="post">
+                <input type="hidden" asp-for="Id" />
+                <button type="submit" class="col btn btn-success btn-sm flex-grow-0 d-block" style="min-width: 70px;">Restore</button>
+            </form>
+            }
+            else
+            {
+            <form asp-action="Delete" asp-controller="Caregiver" method="post">
+                <input type="hidden" asp-for="Id" />
+                <button type="submit" class="col btn btn-danger btn-sm flex-grow-0 d-block" style="min-width: 70px;">Delete</button>
+            </form>
+            }
+            }
+        </div>
+        <div class="col flex-grow-1 text-truncate">@Model.FirstName @Model.LastName</div>
+        <a class="col btn btn-primary btn-sm mr-3 flex-grow-0 d-block" style="min-width: 70px;" asp-action="Edit" asp-controller="Caregiver" asp-route-id="@Model.Id">Edit</a>
+    </div>
+
+    <hr style="margin-top: .5rem;" />
+    <div class="row">
+        <div class="col-12 d-flex flex-column">
+            <input type="hidden" asp-for="Id" />
+            <div class="row mb-2 pb-2" style="border-bottom: 1px solid rgba(0,0,0,.1)">
+                <div class="data-group-centered border-right-not-mobile col-4 px-4">
+                    <div>Being a Mom Class</div>
+                    <div>@Model.MomClass</div>
+                </div>
+                <div class="data-group-centered border-right-not-mobile col-4 px-4">
+                    <div>Spanish</div>
+                    <div>@Model.Spanish</div>
+                </div>
+                <div class="data-group-centered col-4 px-4">
+                    <div>Foster Mom</div>
+                    <div>@Model.Foster</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="data-group-centered border-right-not-mobile col-6 px-4">
+                    <div>Date of Birth</div>
+                    @if (string.IsNullOrWhiteSpace(Model.DateOfBirth.ToString()))
+                    {
+                        <div>-</div>
+                    }
+                    else
+                    {
+                        <div>@Model.DateOfBirth.Value.Date.ToString("d")<span class="font-italic">@(Model.AdultFlag ? "" : "- (Teen)")</span></div>
+                    }
+                </div>
+                <div class="data-group-centered col-6 px-4">
+                    <div>Zip</div>
+                    <div>@(string.IsNullOrWhiteSpace(Model.Zip) ? "-" : Model.Zip)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="external-section-flex-lg mt-3" style="overflow: hidden;">
+    <div class="d-flex align-items-center justify-content-center">
+        <div style="min-width: 135px;">
+            @if (User.IsInRole(Roles.Admin.ToString()))
+            {
+            <button type="button" class="btn btn-outline-danger btn-sm flex-grow-0" id="show-deleted-btn">Show Deleted (@Model.Referrals.Where(r => r.DelFlag).Count())</button>
+            <button type="button" class="btn btn-outline-info btn-sm flex-grow-0" style="display: none; width: 135px;" id="show-active-btn">Show Active</button>
+            }
+        </div>
+        <h3 class="flex-grow-1 text-center mt-2 text-truncate" style="font-size: 20px;"><span id="deleted-header" style="display: none;">Deleted Referrals</span><span id="active-header">Referrals</span></h3>
+        <a class="btn btn-primary btn-sm flex-grow-0 d-block" style="width: 135px;" asp-action="Create" asp-controller="Referral" asp-route-caregiverId="@Model.Id">Add</a>
+    </div>
+    <p class="text-center my-1">Click a row to see details for the referral.</p>
+    <hr class="my-1" />
+    <table class="table table-bordered table-striped table-scrolling table-center table-highlight" id="table-active" aria-label="A table of the different referrals associated to this caregiver.">
+        <thead>
+            <tr>
+                <th>Referral Date</th>
+                <th>Assigned To</th>
+                <th>Child Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var referral in Model.Referrals.Where(r => !r.DelFlag))
+            {
+                <tr data-id="@referral.Id">
+                    <td class="text-center">@referral.ReferralDate.Date.ToString("d")</td>
+                    <td class="text-center">@(referral.AssignedTo.HasValue ? Model.Assignees.Where(x => x.Id == referral.AssignedTo.Value).Single().Label : "-")</td>
+                    <td class="text-center">@referral.ChildName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <table class="table table-bordered table-striped table-scrolling table-center table-highlight" id="table-deleted" style="display: none;" aria-label="A table of the deleted referrals associated to this caregiver.">
+        <thead>
+            <tr>
+                <th>Referral Date</th>
+                <th>Assigned To</th>
+                <th>Child Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var referral in Model.Referrals.Where(r => r.DelFlag))
+            {
+                <tr data-id="@referral.Id">
+                    <td class="text-center">@referral.ReferralDate.Date.ToString("d")</td>
+                    <td class="text-center">@(referral.AssignedTo.HasValue ? Model.Assignees.Where(x => x.Id == referral.AssignedTo.Value).Single().Label : "-")</td>
+                    <td class="text-center">@referral.ChildName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+@section Scripts {
+    <script>
+        $('.table').DataTable({
+            "sDom": '<"top">rt<"bottom"><"clear">',
+            "order": [[0, "desc"]]
+        });
+
+        $("body").on("keypress click", ".table td", function (e) {
+            if (e.which === 13 || e.type === 'click') {
+                var row = $(this).closest("tr");
+                var id = $(row).data("id");
+                var url = window.getPath("~/Referral/Edit?id=" + id);
+                window.location.href = url;
+            }
+        });
+
+        $("#show-deleted-btn").on("click", function () {
+            $("#table-deleted").show();
+            $("#deleted-header").show();
+            $("#table-active").hide();
+            $("#active-header").hide();
+            $("#show-active-btn").show();
+            $(this).hide();
+        });
+
+        $("#show-active-btn").on("click", function () {
+            $("#table-deleted").hide();
+            $("#deleted-header").hide();
+            $("#table-active").show();
+            $("#active-header").show();
+            $("#show-deleted-btn").show();
+            $(this).hide();
+        })
+    </script>
+}

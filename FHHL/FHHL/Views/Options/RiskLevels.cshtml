@@ -1,0 +1,172 @@
+﻿@inject FHHL.BLL.Interfaces.IOptionsService optionsService
+@{
+    var riskLevels = await optionsService.GetRiskLevelsAsync();
+    ViewData["Title"] = "Risk Levels";
+}
+
+
+<main class="external-section-flex-lg pb-4">
+    <div class="row">
+        <div class="col-12 external-section-header">
+            Risk Levels
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-12 mb-3">
+            <p class="text-center">You can create a new Risk Level option, edit an existing Risk Level option, or deactivate an existing Risk Level option.</p>
+        </div>
+        <div class="col-12 col-md-6 text-center border-right-not-mobile">
+            <div class="form-group p-2">
+                <label class="font-weight-bold" for="NewRiskLevel">Add A New Risk Level Option</label>
+                <div class="d-flex">
+                    <input class="form-control mr-3" id="NewRiskLevel" name="NewRiskLevel">
+                    <button type="button" id="modal-create-trigger" class="btn btn-success">Create</button>
+                </div>
+                <div id="NewRiskLevelValidation" class="text-left" style="color: red;"></div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 text-center">
+            <div class="form-group p-2">
+                <label for="test" class="font-weight-bold">Select An Existing Risk Level Option</label>
+                <div class="d-flex">
+                    <select class="form-control flex-grow-1 mr-3 selectpicker" id="RiskLevelSelect" style="width: auto;">
+                        @foreach (var r in riskLevels.Where(r => r.ActiveFlag).OrderBy(r => r.Label))
+                        {
+                            <option data-active-flag="@r.ActiveFlag" data-label="@r.Label" value="@r.Id">@r.Label</option>
+                        }
+                        <option data-divider="true"></option>
+                        @foreach (var r in riskLevels.Where(r => !r.ActiveFlag).OrderBy(r => r.Label))
+                        {
+                            <option data-active-flag="@r.ActiveFlag" data-label="@r.Label" class="font-italic" value="@r.Id">@r.Label - Deactivated</option>
+
+                        }
+                    </select>
+                    <button type="button" data-toggle="modal" data-target="#modal-edit-RiskLevel" id="modal-edit-trigger" class="btn btn-info" style="min-width: 80px;">Edit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+
+
+<div class="modal fade" id="modal-edit-RiskLevel" tabindex="-1" aria-labelledby="editRiskLevel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="uploadLabel">Edit Risk Level</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <form method="post" asp-controller="Options" asp-action="EditRiskLevel" asp-antiforgery="false" enctype="multipart/form-data" class="modal-body" id="mainForm">
+                <input type="hidden" id="Id" name="id" value="0" />                    
+                <p class="text-center">Change or disable the selected Risk Level.</p>
+                <div class="row">
+                    <div class="form-group col-12">
+                        <label for="">Currently*</label>
+                        <input id="currentRiskLevelName-Edit" class="form-control disabled" disabled />
+                    </div>
+                    <div class="form-group col-12">
+                        <label for="">Change To*</label>
+                        <input id="ChangedRiskLevelName" name="ChangedRiskLevelName" class="form-control" autocomplete="off" />
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <div class="edit-modal-footer row">
+                    <div class="col-3 pl-0">
+                        <button type="button" class="btn btn-warning pull-left modal-delete-confirm-show" id="activeButton-1">Deactivate</button>
+                    </div>
+                    <div class="col-9 pr-0 d-flex justify-content-end">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" form="mainForm">Update</button>
+                    </div>
+                </div>
+                <div class="delete-modal-footer row flex-grow-1 justify-content-between align-items-center" style="display:none">
+                    <p class="mb-0">Are you sure?</p>
+                    <form asp-controller="Options" asp-action="ToggleRiskLevelActiveFlag" asp-antiforgery="false" class="text-right">
+                        <input type="hidden" id="RiskLevelId" name="RiskLevelId" value="0" />
+                        <button type="button" class="btn btn-light modal-delete-cancel">Cancel</button>
+                        <button type="submit" class="btn btn-warning" id="activeButton-2">Yes, Deactivate This Level</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form method="post" asp-controller="Options" asp-action="CreateRiskLevel" asp-antiforgery="false" enctype="multipart/form-data">
+    <input type="hidden" id="NewRiskLevelName" name="NewRiskLevelName" />
+    <div class="modal fade" id="modal-create-RiskLevel" tabindex="-1" aria-labelledby="createRiskLevel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="uploadLabel">Create Risk Level</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center">You are about to create the Risk Level option of <span id="newRiskLevelText" class="font-weight-bold"></span>. You will not be able to delete this option once it has been created.</p>
+                    <p class="text-center" style="font-size: 18px;">Are you sure you want to continue?</p>
+                </div>
+                <div class="modal-footer">
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        $("body").on("keypress click", "#modal-edit-trigger", function (e) {
+            if (e.which === 13 || e.type === 'click') {
+                var id = $('#RiskLevelSelect').val();
+                var currentRiskLevel = $('#RiskLevelSelect option:selected').data('label');
+                $('#Id').val(id);
+                $('#RiskLevelId').val(id);
+                $('#currentRiskLevelName-Edit').val(currentRiskLevel);
+                var activeFlag = $('#RiskLevelSelect option:selected').data('active-flag');
+
+                if (activeFlag == "False") {
+                    $('#activeButton-1').removeClass('btn-warning');
+                    $('#activeButton-1').addClass('btn-success');
+                    $('#activeButton-1').text('Reactivate');
+                    $('#activeButton-2').removeClass('btn-warning');
+                    $('#activeButton-2').addClass('btn-success');
+                    $('#activeButton-2').text('Yes, Reactivate This Level');
+                }
+                else {
+                    $('#activeButton-1').removeClass('btn-success');
+                    $('#activeButton-1').addClass('btn-warning');
+                    $('#activeButton-1').text('Deactivate');
+                    $('#activeButton-2').removeClass('btn-success');
+                    $('#activeButton-2').addClass('btn-warning');
+                    $('#activeButton-2').text('Yes, Deactivate This Level');
+                }
+            }
+        });
+
+        $("body").on("keypress click", "#modal-create-trigger", function (e) {
+            if (e.which === 13 || e.type === 'click') {
+                var newRiskLevel = $('#NewRiskLevel').val().trim();
+                $('#NewRiskLevelValidation').text("");
+                if (!newRiskLevel) {
+                    $('#NewRiskLevelValidation').text("This cannot be empty before continuing with Create.")
+                }
+                else {
+                    $('#NewRiskLevelName').val(newRiskLevel);
+                    $('#newRiskLevelText').text(newRiskLevel);
+                    $('#modal-create-RiskLevel').modal('show');
+                }
+
+            }
+        });
+    </script>
+}
+

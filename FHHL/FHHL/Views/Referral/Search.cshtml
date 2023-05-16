@@ -1,0 +1,108 @@
+﻿@model FHHL.Web.Models.Referral.SearchViewModel
+@inject FHHL.BLL.Interfaces.IOptionsService optionsService
+@{
+    var assignees = await optionsService.GetAssigneesAsync();
+    var referralSources = await optionsService.GetReferralSourcesAsync();
+    var programs = await optionsService.GetProgramsAsync();
+    var visitResults = await optionsService.GetVisitResultsAsync();
+    ViewData["Title"] = "Search Referrals";
+}
+
+<style>
+    td {
+        text-align: center;
+    }
+</style>
+
+<main class="external-section-flex-full">
+    <div class="row">
+        <div class="col-2">
+            @if (User.IsInRole(Roles.Admin.ToString()))
+            {
+                <a class="btn btn-danger" asp-action="Deleted" asp-controller="Referral">Deleted Referrals</a>
+            }
+        </div>
+        <div class="col-8 external-section-header">
+            Search Referrals
+        </div>
+        <div class="col-2"></div>
+    </div>
+    <hr />
+    <input type="hidden" asp-for="DeletedRecords" value="false" />
+    <div class="row">
+        <div class="col-md-6 col-lg-3 form-group">
+            <label asp-for="ReferralDateStart">Referral Date From</label>
+            <input asp-for="ReferralDateStart" class="form-control filter-control datepicker" autocomplete="off" />
+        </div>
+        <div class="col-md-6 col-lg-3 form-group">
+            <label asp-for="ReferralDateEnd">To</label>
+            <input asp-for="ReferralDateEnd" class="form-control filter-control datepicker" autocomplete="off" />
+        </div>
+        <div class="col-md-6 col-lg-3 form-group">
+            <label asp-for="CaregiverName"></label>
+            <input asp-for="CaregiverName" class="form-control filter-control" />
+        </div>
+        <div class="col-md-6 col-lg-3 form-group">
+            <label asp-for="ChildName"></label>
+            <input asp-for="ChildName" class="form-control filter-control" />
+        </div>
+
+
+        <div class="col-sm-12 col-md-6 col-lg-3 form-group">
+            <label asp-for="AssignedTo"></label>
+            <select asp-for="AssignedTo" class="form-control filter-control">
+                <option></option>
+                <option value="0">-null-</option>
+                @foreach (var assignee in assignees)
+                {
+                    <option value="@assignee.Id">@assignee.Label</option>
+                }
+            </select>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-3 form-group">
+            <label asp-for="ReferralSourceIds"></label>
+            <select asp-for="ReferralSourceIds" class="form-control selectpicker filter-control" multiple>
+                @foreach (var referralSource in referralSources)
+                {
+                    <option value="@referralSource.Id">@referralSource.Label</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-6 col-lg-3 form-group">
+            <label asp-for="Program"></label>
+            <select asp-for="Program" class="form-control filter-control">
+                <option></option>
+                <option value="0">-null-</option>
+                @foreach (var program in programs)
+                {
+                    <option value="@program.Id">@program.Label</option>
+                }
+            </select>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-3 form-group">
+            <label asp-for="Result"></label>
+            <select asp-for="Result" class="form-control filter-control">
+                <option></option>
+                <option value="0">-null-</option>
+                @foreach (var visitResult in visitResults)
+                {
+                    <option value="@visitResult.Id">@visitResult.Label</option>
+                }
+            </select>
+        </div>
+    </div>
+
+
+    <hr />
+    <div class="row">
+        <div class="col-12">
+            <table id="referral-search-results" class="table table-bordered table-striped table-highlight">
+                <caption class="text-center">A clickable set of the referral records that match the specified search criteria.</caption>
+            </table>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/ReferralSearchTable.js"></script>
+}

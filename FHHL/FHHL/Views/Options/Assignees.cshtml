@@ -1,0 +1,172 @@
+﻿@inject FHHL.BLL.Interfaces.IOptionsService optionsService
+@{
+    var assignees = await optionsService.GetAssigneesAsync();
+    ViewData["Title"] = "Assignees";
+}
+
+
+<main class="external-section-flex-lg pb-4">
+    <div class="row">
+        <div class="col-12 external-section-header">
+            Assignees
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-12 mb-3">
+            <p class="text-center">You can create a new Assignee option, edit an existing Assignee option, or deactivate an existing Assignee option.</p>
+        </div>
+        <div class="col-12 col-md-6 text-center border-right-not-mobile">
+            <div class="form-group p-2">
+                <label class="font-weight-bold" for="NewAssignee">Add A New Assignee Option</label>
+                <div class="d-flex">
+                    <input class="form-control mr-3" id="NewAssignee" name="NewAssignee">
+                    <button type="button" id="modal-create-trigger" class="btn btn-success">Create</button>
+                </div>
+                <div id="NewAssigneeValidation" class="text-left" style="color: red;"></div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 text-center">
+            <div class="form-group p-2">
+                <label for="test" class="font-weight-bold">Select An Existing Assignee Option</label>
+                <div class="d-flex">
+                    <select class="form-control flex-grow-1 mr-3 selectpicker" id="AssigneeSelect" style="width: auto;">
+                        @foreach (var r in assignees.Where(r => r.ActiveFlag).OrderBy(r => r.Label))
+                        {
+                            <option data-active-flag="@r.ActiveFlag" data-label="@r.Label" value="@r.Id">@r.Label</option>
+                        }
+                        <option data-divider="true"></option>
+                        @foreach (var r in assignees.Where(r => !r.ActiveFlag).OrderBy(r => r.Label))
+                        {
+                            <option data-active-flag="@r.ActiveFlag" data-label="@r.Label" class="font-italic" value="@r.Id">@r.Label - Deactivated</option>
+
+                        }
+                    </select>
+                    <button type="button" data-toggle="modal" data-target="#modal-edit-assignee" id="modal-edit-trigger" class="btn btn-info" style="min-width: 80px;">Edit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+
+
+<div class="modal fade" id="modal-edit-assignee" tabindex="-1" aria-labelledby="editAssignee" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="uploadLabel">Edit Assignee</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <form method="post" asp-controller="Options" asp-action="EditAssignee" asp-antiforgery="false" enctype="multipart/form-data" class="modal-body" id="mainForm">
+                <input type="hidden" id="Id" name="id" value="0" />                    
+                <p class="text-center">Change or disable the selected assignee.</p>
+                <div class="row">
+                    <div class="form-group col-12">
+                        <label for="">Currently*</label>
+                        <input id="currentAssigneeName-Edit" class="form-control disabled" disabled />
+                    </div>
+                    <div class="form-group col-12">
+                        <label for="">Change To*</label>
+                        <input id="ChangedAssigneeName" name="ChangedAssigneeName" class="form-control" autocomplete="off" />
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <div class="edit-modal-footer row">
+                    <div class="col-3 pl-0">
+                        <button type="button" class="btn btn-warning pull-left modal-delete-confirm-show" id="activeButton-1">Deactivate</button>
+                    </div>
+                    <div class="col-9 pr-0 d-flex justify-content-end">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" form="mainForm">Update</button>
+                    </div>
+                </div>
+                <div class="delete-modal-footer row flex-grow-1 justify-content-between align-items-center" style="display:none">
+                    <p class="mb-0">Are you sure?</p>
+                    <form asp-controller="Options" asp-action="ToggleAssigneeActiveFlag" asp-antiforgery="false" class="text-right">
+                        <input type="hidden" id="AssigneeId" name="AssigneeId" value="0" />
+                        <button type="button" class="btn btn-light modal-delete-cancel">Cancel</button>
+                        <button type="submit" class="btn btn-warning" id="activeButton-2">Yes, Deactivate This Assignee</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form method="post" asp-controller="Options" asp-action="CreateAssignee" asp-antiforgery="false" enctype="multipart/form-data">
+    <input type="hidden" id="NewAssigneeName" name="NewAssigneeName" />
+    <div class="modal fade" id="modal-create-assignee" tabindex="-1" aria-labelledby="createAssignee" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="uploadLabel">Create Assignee</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center">You are about to create the assignee option of <span id="newAssigneeText" class="font-weight-bold"></span>. You will not be able to delete this option once it has been created.</p>
+                    <p class="text-center" style="font-size: 18px;">Are you sure you want to continue?</p>
+                </div>
+                <div class="modal-footer">
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        $("body").on("keypress click", "#modal-edit-trigger", function (e) {
+            if (e.which === 13 || e.type === 'click') {
+                var id = $('#AssigneeSelect').val();
+                var currentAssignee = $('#AssigneeSelect option:selected').data('label');
+                $('#Id').val(id);
+                $('#AssigneeId').val(id);
+                $('#currentAssigneeName-Edit').val(currentAssignee);
+                var activeFlag = $('#AssigneeSelect option:selected').data('active-flag');
+
+                if (activeFlag == "False") {
+                    $('#activeButton-1').removeClass('btn-warning');
+                    $('#activeButton-1').addClass('btn-success');
+                    $('#activeButton-1').text('Reactivate');
+                    $('#activeButton-2').removeClass('btn-warning');
+                    $('#activeButton-2').addClass('btn-success');
+                    $('#activeButton-2').text('Yes, Reactivate This Assignee');
+                }
+                else {
+                    $('#activeButton-1').removeClass('btn-success');
+                    $('#activeButton-1').addClass('btn-warning');
+                    $('#activeButton-1').text('Deactivate');
+                    $('#activeButton-2').removeClass('btn-success');
+                    $('#activeButton-2').addClass('btn-warning');
+                    $('#activeButton-2').text('Yes, Deactivate This Assignee');
+                }
+            }
+        });
+
+        $("body").on("keypress click", "#modal-create-trigger", function (e) {
+            if (e.which === 13 || e.type === 'click') {
+                var newAssignee = $('#NewAssignee').val().trim();
+                $('#NewAssigneeValidation').text("");
+                if (!newAssignee) {
+                    $('#NewAssigneeValidation').text("This cannot be empty before continuing with Create.")
+                }
+                else {
+                    $('#NewAssigneeName').val(newAssignee);
+                    $('#newAssigneeText').text(newAssignee);
+                    $('#modal-create-assignee').modal('show');
+                }
+            }
+        });
+    </script>
+
+}
+

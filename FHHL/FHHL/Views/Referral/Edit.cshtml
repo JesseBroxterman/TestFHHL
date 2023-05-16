@@ -1,0 +1,299 @@
+﻿@model FHHL.Web.Models.Record.EditViewModel
+@inject FHHL.BLL.Interfaces.IOptionsService optionsService
+@{
+    var assignees = await optionsService.GetAssigneesAsync();
+    var referralSources = await optionsService.GetReferralSourcesAsync();
+    var programs = await optionsService.GetProgramsAsync();
+    var visitResults = await optionsService.GetVisitResultsAsync();
+    var races = await optionsService.GetRacesAsync();
+    var pregnancyStates = await optionsService.GetPregnancyStatesAsync();
+    var riskLevels = await optionsService.GetRiskLevelsAsync();
+
+    ViewData["Title"] = "Edit Record";
+}
+
+
+<main class="external-section-flex-lg">
+    <form method="post">
+        <input type="hidden" asp-for="Id" />
+        <div class="row">
+            <div class="col-12 mb-1 external-section-header">
+                Edit Referral for @Model.CaregiverName
+            </div>
+            <div class="col-12">
+                <p class="text-center mb-0" style="font-size: 14px;">Fields marked with * are required.</p>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-lg-4 border-right-not-mobile">
+                <input type="hidden" asp-for="CaregiverId" />
+
+                <h3 class="text-center" style="font-size: 25px;">Referral Info</h3>
+                <div class="form-group">
+                    <label asp-for="ReferralDate">Referral Date *</label>
+                    <input type="text" asp-for="ReferralDate" class="form-control datepicker" autocomplete="off" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="SelectedReferralSources">Referral Source(s)</label>
+                    <select class="selectpicker form-control" asp-for="SelectedReferralSources" multiple>
+                        @foreach (var r in referralSources)
+                        {
+                            <option value="@r.Id">@r.Label</option>
+                        }
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label asp-for="ReferralReason"></label>
+                    <textarea type="text" asp-for="ReferralReason" style="height: 125px;" class="form-control"></textarea>
+                </div>
+                <div class="form-group d-flex align-items-center justify-content-between">
+                    <label asp-for="FtoF" class="mb-0">Face to Face Referral</label>
+                    <label class="switch ml-3 mb-0">
+                        <input type="checkbox" asp-for="FtoF" class="primary" value="true">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-lg-4 border-right-not-mobile">
+                <h3 class="text-center" style="font-size: 25px;">Child Info</h3>
+                <div class="form-group">
+                    <label asp-for="ChildName"></label>
+                    <input asp-for="ChildName" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="ChildDateOfBirth"></label>
+                    <input type="text" asp-for="ChildDateOfBirth" class="form-control datepicker" autocomplete="off" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="SelectedRaces">Child Race(s)</label>
+                    <select class="selectpicker form-control" asp-for="SelectedRaces" multiple>
+                        @foreach (var r in races.Where(r => r.ActiveFlag))
+                        {
+                            <option value="@r.Id">@r.Label</option>
+                        }
+                        @if (races.Any(x => x.ActiveFlag == false && Model.SelectedRaces.Contains(x.Id)))
+                        {
+                            <option data-divider="true"></option>
+                            @foreach (var r in races.Where(r => r.ActiveFlag == false))
+                            {
+                                if (Model.SelectedRaces.Contains(r.Id))
+                                {
+                                    <option value="@r.Id" class="font-italic">@r.Label - Deactivated</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Type">Pregnancy State</label>
+                    <select asp-for="Type" class="form-control selectpicker">
+                        <option></option>
+                        @foreach (var r in pregnancyStates.Where(r => r.ActiveFlag))
+                        {
+                            <option value="@r.Id">@r.Label</option>
+                        }
+                        @if (pregnancyStates.Any(x => x.ActiveFlag == false && x.Id == Model.Type))
+                        {
+                            <option data-divider="true"></option>
+                            foreach (var r in pregnancyStates.Where(r => r.ActiveFlag == false))
+                            {
+                                if (r.Id == Model.Type)
+                                {
+                                    <option value="@r.Id" class="font-italic">@r.Label - Deactivated</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LOR">Risk Level</label>
+                    <select asp-for="LOR" class="form-control selectpicker">
+                        <option></option>
+                        @foreach (var r in riskLevels.Where(r => r.ActiveFlag))
+                        {
+                            <option value="@r.Id">@r.Label</option>
+                        }
+                        @if (riskLevels.Any(x => x.ActiveFlag == false && x.Id == Model.LOR))
+                        {
+                            <option data-divider="true"></option>
+                            foreach (var r in riskLevels.Where(r => r.ActiveFlag == false))
+                            {
+                                if (r.Id == Model.Type)
+                                {
+                                    <option value="@r.Id" class="font-italic">@r.Label - Deactivated</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Program"></label>
+                    <select asp-for="Program" class="form-control">
+                        <option></option>
+                        @foreach (var r in programs.Where(r => r.ActiveFlag))
+                        {
+                            <option value="@r.Id">@r.Label</option>
+                        }
+                        @if (programs.Any(x => x.ActiveFlag == false && x.Id == Model.Program))
+                        {
+                            <option data-divider="true"></option>
+                            foreach (var r in programs.Where(r => r.ActiveFlag == false))
+                            {
+                                if (r.Id == Model.Program)
+                                {
+                                    <option value="@r.Id" class="font-italic">@r.Label - Deactivated</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EDC"></label>
+                    <input type="text" asp-for="EDC" class="form-control datepicker" autocomplete="off" />
+                </div>
+                <div class="form-group d-flex align-items-center justify-content-between">
+                    <label asp-for="FirstChild" class="mb-0"></label>
+                    <label class="switch ml-3 mb-0">
+                        <input type="checkbox" asp-for="FirstChild" class="primary" value="true">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+            </div>
+            <div class="col-lg-4">
+                <h3 class="text-center" style="font-size: 25px;">Outcome</h3>
+                <div class="form-group">
+                    <label asp-for="AssignedTo"></label>
+                    <select asp-for="AssignedTo" class="form-control">
+                        <option></option>
+                        @foreach (var r in assignees.Where(r => r.ActiveFlag))
+                        {
+                            <option value="@r.Id">@r.Label</option>
+                        }
+                        @if (assignees.Any(x => x.ActiveFlag == false && x.Id == Model.AssignedTo))
+                        {
+                            <option data-divider="true"></option>
+                            foreach (var r in assignees.Where(r => r.ActiveFlag == false))
+                            {
+                                if (r.Id == Model.AssignedTo)
+                                {
+                                    <option value="@r.Id" class="font-italic">@r.Label - Deactivated</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AssignDate"></label>
+                    <input type="text" asp-for="AssignDate" class="form-control datepicker" autocomplete="off" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Result"></label>
+                    <select asp-for="Result" class="form-control">
+                        <option></option>
+                        @foreach (var r in visitResults.Where(r => r.ActiveFlag))
+                        {
+                            <option value="@r.Id">@r.Label</option>
+                        }
+                        @if (visitResults.Any(x => x.ActiveFlag == false && x.Id == Model.Result))
+                        {
+                            <option data-divider="true"></option>
+                            foreach (var r in visitResults.Where(r => r.ActiveFlag == false))
+                            {
+                                if (r.Id == Model.Result)
+                                {
+                                    <option value="@r.Id" class="font-italic">@r.Label - Deactivated</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ResultDate"></label>
+                    <input type="text" asp-for="ResultDate" class="form-control datepicker" autocomplete="off" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Notes"></label>
+                    <textarea type="text" asp-for="Notes" style="height: 125px;" class="form-control"></textarea>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="d-flex justify-content-between align-items-center">
+            @if (Model.DelFlag)
+            {
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#RestoreModal">Restore</button>
+            } else
+            {
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#DeleteModal">Delete</button>
+            }
+            <div>
+                <a asp-controller="Caregiver" asp-action="Dashboard" asp-route-id="@Model.CaregiverId" class="btn btn-link">Cancel</a>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </form>
+</main>
+
+<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="DeleteLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="DeleteLabel">Delete Referral</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form class="modal-body" asp-controller="Referral" asp-action="Delete" method="post">
+                <input type="hidden" asp-for="Id" />
+                <div class="mx-auto" style="max-width:500px;">
+                    <p class="text-center">
+                        Are you certain you wish to delete this referral?
+                    </p>
+                </div>
+                <hr />
+                <div class="row justify-content-end">
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">No</button>
+                        <button type="submit" class="btn btn-primary">Yes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="RestoreModal" tabindex="-1" role="dialog" aria-labelledby="RestoreLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="RestoreLabel">Restore Referral</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form class="modal-body" asp-controller="Referral" asp-action="Restore" method="post">
+                <input type="hidden" asp-for="Id" />
+                <div class="mx-auto" style="max-width:500px;">
+                    <p class="text-center">
+                        Are you certain you wish to restore this referral?
+                    </p>
+                </div>
+                <hr />
+                <div class="row justify-content-end">
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">No</button>
+                        <button type="submit" class="btn btn-primary">Yes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript" src="~/js/RecordSearchTable.js"></script>
+}

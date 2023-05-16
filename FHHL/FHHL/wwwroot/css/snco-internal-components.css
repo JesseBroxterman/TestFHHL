@@ -1,0 +1,372 @@
+﻿#internalTopNav {
+    background-color: #41586e;
+    color: white;
+    margin: -20px -20px 20px;
+    padding: 11px 20px;
+    font-size: 1.1rem;
+    flex-grow: 0;
+    min-height: 60px;
+    border-left: 1px solid rgba(204, 204, 204, .5) !important;
+}
+
+/*#region Header User dropdown*/
+#internalTopNav .utilities-user-btn {
+    display: flex;
+    align-items: center;
+    border: 0;
+    box-shadow: none;
+    color: white;
+    padding: 0 0 0 .75rem;
+}
+
+#internalTopNav .dropdown .dropdown-menu {
+    margin-top: 10px;
+    border-top-left-radius: 1px;
+    border-top-right-radius: 1px;
+    padding: 0;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .15), 0 1px 5px rgba(0, 0, 0, .15);
+}
+
+#internalTopNav .dropdown .dropdown-item {
+    text-align: center;
+    padding: .75rem 1.5rem;
+    font-size: 1.1rem;
+}
+
+    #internalTopNav .dropdown .dropdown-item:hover,
+    #internalTopNav .dropdown .dropdown-item:focus,
+    #internalTopNav .dropdown .dropdown-item:active {
+        background-color: #3C94C2;
+        color: white;
+    }
+/*#endregion*/
+
+#bodyContainer {
+    flex-grow: 1;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+}
+
+footer {
+    flex-grow: 0;
+    margin: 0 -20px -20px -20px;
+    border-top: 1px solid darkgrey;
+    height: 50px;
+    padding: 15px 20px 0;
+    flex-shrink: 0;
+}
+
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    height: 100%;
+    padding: 0px 20px 20px 20px;
+    flex-grow: 1;
+}
+
+/*#region Internal Sidenav */
+.nav-label-xs {
+    display: none;
+}
+
+.nav-xs .nav-label-reg {
+    display: none !important;
+}
+
+/*#region scrollable scrollbar styling */
+.scrollable {
+    -webkit-overflow-scrolling: touch;
+}
+
+    .scrollable::-webkit-scrollbar {
+        width: 7px;
+        height: 7px;
+    }
+
+    .scrollable::-webkit-scrollbar-thumb {
+        background-color: rgba(50,50,50,0.3);
+    }
+
+        .scrollable::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(50,50,50,0.6);
+        }
+
+    .scrollable::-webkit-scrollbar-track {
+        background-color: rgba(50,50,50,0.1);
+    }
+
+        .scrollable::-webkit-scrollbar-track:hover {
+            background-color: rgba(50,50,50,0.2);
+        }
+/*#endregion */
+
+/*#region generic sidenav styling */
+#internalSideNav {
+    background-color: #41586e;
+    color: #9db1c5;
+    min-height: 100vh;
+    max-height: 100vh;
+    height: 100%;
+    z-index: 1040;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    width: 220px;
+    min-width: 220px;
+    max-width: 220px;
+}
+
+    #internalSideNav + .content-wrapper {
+        width: calc(100% - 220px);
+    }
+
+    #internalSideNav a {
+        color: #adbece;
+    }
+
+    #internalSideNav .scrollable {
+        overflow-x: hidden;
+        overflow-y: auto;
+        flex-grow: 1;
+    }
+
+#internalSideNav.nav-xs {
+    width: 80px;
+    min-width: 80px;
+    max-width: 80px;
+}
+
+    #internalSideNav.nav-xs + .content-wrapper {
+        width: calc(100% - 80px);
+    }
+
+    #internalSideNav.nav-xs .scrollable {
+        overflow: visible;
+    }
+/*#endregion*/
+
+/*#region sidenav header styling */
+#internalSideNav .header > a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    min-height: 60px;
+    text-decoration: none;
+}
+
+#internalSideNav.nav-xs .header > a {
+    max-height: 60px;
+    height: 100%;
+}
+
+    #internalSideNav .header > a div:first-child {
+        width: 200px;
+        margin: 10px;
+    }
+
+#internalSideNav .header img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+#internalSideNav .header > a div:last-child {
+    padding: 5px 10px 15px 10px;
+    color: white;
+    font-size: 1.4rem;
+}
+
+#internalSideNav.nav-xs .header > a div:last-child {
+    display: none;
+}
+/*#endregion */
+
+/*#region sidenav footer styling */
+#internalSideNav .footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-height: 50px;
+    padding: 0 15px;
+    border-top: 1px solid #374b5e;
+    background-color: #374b5e;
+}
+
+#navToggle {
+    color: #fff;
+    background-color: #2e3e4e;
+    border-color: #2e3e4e;
+    width: 30px;
+}
+
+    #navToggle i:before {
+        content: "\f104";
+    }
+
+.nav-xs #navToggle i:before {
+    content: "\f105";
+}
+/*#endregion */
+
+/*#region nav default styling */
+#internalSideNav nav {
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 1.1rem;
+}
+
+    #internalSideNav nav ul {
+        padding-left: 0;
+        margin-bottom: 0;
+        list-style: none;
+    }
+
+    #internalSideNav nav li {
+        position: relative;
+        display: block;
+    }
+
+    #internalSideNav nav a {
+        display: flex;
+        align-items: stretch;
+        border-top: 1px solid rgba(255,255,255,0.05);
+        transition: color .3s ease-in-out 0s;
+        position: relative;
+        padding: 10px 15px;
+    }
+
+    #internalSideNav nav span {
+        flex-grow: 1;
+    }
+
+    #internalSideNav nav i {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        #internalSideNav nav i:before {
+            position: relative;
+            z-index: 2;
+        }
+
+    #internalSideNav nav a.active > i.fa-angle-down:before {
+        content: "\f106";
+    }
+
+    #internalSideNav nav i:first-child {
+        flex-shrink: 0;
+        position: relative;
+        width: 44px;
+        margin: -10px 10px -10px -15px;
+        border-right: 1px solid rgba(255,255,255,0.05);
+    }
+
+    #internalSideNav nav b {
+        position: absolute;
+        width: 100%;
+        top: 0;
+        bottom: 0;
+        z-index: 0;
+        left: -45px;
+        -webkit-transition: left .25s;
+        transition: left .25s;
+    }
+
+    #internalSideNav nav li:hover b,
+    #internalSideNav nav li:focus b,
+    #internalSideNav nav li.active b {
+        left: 0;
+    }
+
+    #internalSideNav nav li:hover > a,
+    #internalSideNav nav li:focus > a,
+    #internalSideNav nav li.active > a {
+        color: #fff;
+        background-color: rgba(0,0,0,0.05) !important;
+        text-decoration: none;
+    }
+
+    #internalSideNav nav li.active > ul {
+        display: block;
+    }
+
+    #internalSideNav nav ul ul {
+        display: none;
+        background-color: #374b5e;
+        font-size: 1rem;
+    }
+/*#endregion */
+
+/*#region nav collapsed (nav-xs) styling */
+#internalSideNav.nav-xs nav > ul > li > a {
+    padding: 0;
+    font-size: 0.9rem;
+    text-align: center;
+    height: 80px;
+    overflow-y: hidden;
+    border: none;
+    display: block;
+}
+
+    #internalSideNav.nav-xs nav > ul > li > a span {
+        /*color: #fff !important;*/
+        display: table-cell;
+        vertical-align: middle;
+        height: 80px;
+        width: 80px;
+        position: relative;
+        /*z-index: 2;*/
+        padding: 5px;
+    }
+
+    #internalSideNav.nav-xs nav > ul > li > a i {
+        width: auto;
+        /*float: none;*/
+        /*display: block;*/
+        font-size: 1.6rem;
+        margin: 0;
+        line-height: 80px;
+        border: none !important;
+        color: #fff !important;
+        overflow: visible;
+        -webkit-transition: margin-top 0.2s;
+        transition: margin-top 0.2s;
+    }
+
+#internalSideNav.nav-xs nav li > a > i.fa-angle-down {
+    display: none;
+}
+
+#internalSideNav.nav-xs nav b {
+    left: 0;
+    height: 160px;
+}
+
+#internalSideNav.nav-xs nav > ul > li:hover > a i,
+#internalSideNav.nav-xs nav > ul > li:focus > a i,
+#internalSideNav.nav-xs nav > ul > li.active > a i {
+    margin-top: -80px;
+}
+
+#internalSideNav.nav-xs nav ul ul {
+    display: none !important;
+    position: absolute;
+    left: 100%;
+    top: 0;
+    width: 220px;
+    -webkit-box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    border: 1px solid #ddd;
+    border: 1px solid rgba(0,0,0,0.1);
+    background-clip: padding-box;
+}
+
+#internalSideNav.nav-xs nav li:hover > ul,
+#internalSideNav.nav-xs nav li:focus > ul,
+#internalSideNav.nav-xs nav li:active > ul {
+    display: block !important;
+}
+/*#endregion */
+/*#endregion */

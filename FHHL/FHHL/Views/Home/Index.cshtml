@@ -1,0 +1,74 @@
+﻿@model FHHL.Web.Models.Home.IndexViewModel
+@inject FHHL.BLL.Interfaces.IOptionsService optionsService
+@{
+    var assigneesSelectItems = await optionsService.GetAssigneeSelectList();
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    td {
+        text-align: center;
+    }
+</style>
+
+<main class="external-section-flex-lg">
+    <div class="row">
+        <div class="col-2">
+            @if (User.IsInRole(Roles.Admin.ToString()))
+            {
+                <a class="btn btn-danger" asp-action="Deleted" asp-controller="Caregiver">Deleted Caregivers</a>
+            }
+        </div>
+        <div class="col-8 external-section-header">
+            Search Caregivers
+        </div>
+        <div class="col-2"></div>
+    </div>
+    <hr />
+    <input type="hidden" asp-for="DeletedRecords" value="false" />
+    <div class="row">
+        <div class="col-md-6 col-lg-4 form-group">
+            <label asp-for="ReferralDateStart">Referral Date From</label>
+            <input type="text" asp-for="ReferralDateStart" class="form-control filter-control datepicker" autocomplete="off" />
+        </div>
+        <div class="col-md-6 col-lg-4 form-group">
+            <label asp-for="ReferralDateEnd">To</label>
+            <input asp-for="ReferralDateEnd" class="form-control filter-control datepicker" autocomplete="off" />
+        </div>
+        <div class="col-md-6 col-lg-4 form-group">
+            <label asp-for="DateOfBirth">Caregiver Date of Birth</label>
+            <input asp-for="DateOfBirth" class="form-control filter-control datepicker" autocomplete="off" />
+        </div>
+        <div class="col-md-6 col-lg-4 form-group">
+            <label asp-for="CaregiverName"></label>
+            <input asp-for="CaregiverName" class="form-control filter-control" />
+        </div>
+        <div class="col-md-6 col-lg-4 form-group">
+            <label asp-for="ChildName"></label>
+            <input asp-for="ChildName" class="form-control filter-control" />
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-4 form-group">
+            <label asp-for="AssignedTo"></label>
+            <select asp-for="AssignedTo" class="form-control filter-control" asp-items="assigneesSelectItems">
+                <option></option>
+            </select>
+        </div>
+
+
+    </div>
+
+
+    <hr />
+    <div class="row">
+        <div class="col-12">
+            <table id="record-search-results" class="table table-bordered table-striped table-highlight">
+                <caption class="text-center">A clickable set of the records that match the specified search criteria.</caption>
+            </table>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/RecordSearchTable.js"></script>
+}

@@ -1,0 +1,155 @@
+﻿@model FHHL.Web.Models.Caregiver.CreateViewModel
+@inject FHHL.BLL.Interfaces.IOptionsService optionsService
+@{
+    var racesSelectItems = await optionsService.GetRacesSelectList();
+    ViewData["Title"] = "Create Caregiver";
+}
+
+<main class="external-section-flex" style="max-width: 500px;">
+    <form method="post" id="newCaregiverForm">
+        <div class="row">
+            <div class="col-12 mb-1 external-section-header">
+                Create Caregiver
+            </div>
+            <div class="col-12">
+                <p class="text-center mb-0" style="font-size: 14px;">Fields marked with * are required.</p>
+            </div>
+        </div>
+        <hr style="margin-top: .5rem;" />
+        <div class="row">
+            <div class="col-12 d-flex flex-column">
+                <div class="form-group">
+                    <label asp-for="FirstName">First Name *</label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName">Last Name *</label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DateOfBirth">Date of Birth</label>
+                    <input type="text" asp-for="DateOfBirth" class="form-control datepicker" autocomplete="off" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="SelectedRaces">Race(s)</label>
+                    <select class="selectpicker form-control" asp-for="SelectedRaces" multiple asp-items="racesSelectItems"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Zip"></label>
+                    <input type="number" asp-for="Zip" class="form-control" placeholder="_ _ _ _ _" />
+                    <span asp-validation-for="Zip"></span>
+                </div>
+                <div class="form-group d-flex align-items-center justify-content-between">
+                    <label asp-for="MomClass" class="mb-0">Becoming a Mom Class</label>
+                    <label class="switch ml-3 mb-0">
+                        <input type="checkbox" asp-for="MomClass" class="primary" value="true">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <div class="form-group d-flex align-items-center justify-content-between">
+                    <label asp-for="Spanish" class="mb-0"></label>
+                    <label class="switch ml-3 mb-0">
+                        <input type="checkbox" asp-for="Spanish" class="primary" value="true">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <div class="form-group d-flex align-items-center justify-content-between">
+                    <label asp-for="Foster" class="mb-0"></label>
+                    <label class="switch ml-3 mb-0">
+                        <input type="checkbox" asp-for="Foster" class="primary" value="true">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+            </div>
+        </div>
+        <hr class="mt-1" />
+        <div class="d-flex justify-content-end align-items-center">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-link">Cancel</a>
+            <button type="button" id="check-btn" class="btn btn-primary">Create</button>
+        </div>
+    </form>
+</main>
+
+<form asp-antiforgery="false">
+    <div class="modal fade" id="modal-check" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-mobile">
+            <div class="modal-content modal-mobile-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" style="display:inline;">Caregiver Check</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12 modal-error text-danger"></div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-10">
+                            <p>There is already a caregiver named <span class="font-weight-bold" id="modalFirstName"></span> <span class="font-weight-bold" id="modalLastName"></span> with a date of birth of  <span class="font-weight-bold" id="modalDoB"></span>.</p>
+                            <p>To prevent having duplicate caregiver records, please confirm that the other caregiver record is unique from the caregiver record you are about to create.</p>
+                            <p class="font-weight-bold mt-2">Have you confirmed that this is a new, unique caregiver?</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary" id="confirm-btn">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@section Scripts {
+    <script>
+        $("#check-btn").click(function (e) {
+            e.preventDefault();
+
+            $("#newCaregiverForm").valid();
+            if (!$("#newCaregiverForm").data("validator").valid()) {
+                return;
+            }
+
+            if ($("#DateOfBirth").val()) {
+                let submitData = {
+                    FirstName: $("#FirstName").val(),
+                    LastName: $("#LastName").val(),
+                    DateOfBirth: $("#DateOfBirth").val(),
+                };
+
+                $.ajax({
+                    data: submitData,
+                    url: getPath("~/Caregiver/CheckCaregiver"),
+                    method: "POST",
+                    success: function (result) {
+                        if (!result.success) {
+                            showAlert("danger", "Error", result.message);
+                        } else if (result.isDuplicate) {
+                            $('#modalFirstName').text($("#FirstName").val());
+                            $('#modalLastName').text($("#LastName").val());
+                            $('#modalDoB').text($("#DateOfBirth").val());
+                            $("#modal-check").modal("show");
+                        } else {
+                            $("#confirm-btn").click();
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        showAlert("danger", "Error", "Something went wrong while checking the caregiver and could not be continued.");
+                    }
+                });
+            }
+            else {
+                $("#newCaregiverForm").submit();
+            }
+        });
+
+        $("#confirm-btn").click(function () {
+            $("#newCaregiverForm").submit();
+        });
+    </script>
+}
