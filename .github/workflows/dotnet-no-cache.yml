@@ -20,9 +20,9 @@ jobs:
         dotnet-version: 6.0.x
     
     - name: Restore dependencies
-      run: dotnet restore ./FHHL.sln
+      run: dotnet restore FHHL/FHHL.sln
       
     - name: Build
-      run: dotnet build FHHL/FHHL.csproj --no-restore
+      run: dotnet build FHHL/FHHL/FHHL.Web.csproj --no-restore
       
       
