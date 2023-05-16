@@ -14,14 +14,28 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
+    - name: Cache dotnet
+      id: cache-dotnet-core
+      uses: actions/cache@v3
+      with:
+        path: '.\.dotnet'
+        key: ${{ runner.os }}-dotnet-6
+        restore-keys: ${{ runner.os }}-dotnet-6    
+    
     - name: Setup .NET
+      if: steps.cache-dotnet-core.outputs.cache-hit != 'true'
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
         
+    - uses: actions/cache@v3
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore FHHL/FHHL.sln
       
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build FHHL/FHHL/FHHL.Web.csproj --no-restore
 
