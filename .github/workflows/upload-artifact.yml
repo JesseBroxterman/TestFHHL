@@ -36,5 +36,10 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.build-and-publish.outputs.project }}
-          path: ${{ steps.build-and-publish.outputs.project }}/bin/Release/netcoreapp3.1/publish
+          path: |
+            FHHL.Common.Service/bin/Release/netcoreapp3.1/publish
+            FHHL.Common.Web/bin/Release/netcoreapp3.1/publish
+            FHHL.FHHL.Data/bin/Release/netcoreapp3.1/publish
+            FHHL.FHHL.BLL/bin/Release/netcoreapp3.1/publish
+            FHHL.FHHL/bin/Release/netcoreapp3.1/publish
 
