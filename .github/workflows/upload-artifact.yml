@@ -23,7 +23,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.nuget/packages
-          key: ${{ runner.os }}-dotnet-${{ hashFiles('**/YourSolution.sln') }}
+          key: ${{ runner.os }}-dotnet-${{ hashFiles('**/FHHL.sln') }}
           restore-keys: |
             ${{ runner.os }}-dotnet-
             
