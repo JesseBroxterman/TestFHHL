@@ -21,7 +21,7 @@ jobs:
 
       - name: Debug Output Directory
         run: |
-          ls -R ${{ steps.build-and-publish.outputs.project }}/bin/Release/netcoreapp3.1/publish
+          ls -R ${{ github.workspace }}/${{ steps.build-and-publish.outputs.project }}/bin/Release/netcoreapp3.1/publish
 
       - name: Build and publish projects
         run: |
