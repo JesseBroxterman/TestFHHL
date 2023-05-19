@@ -25,11 +25,14 @@ jobs:
             project_dir=$(dirname $project)
             project_name=$(basename $project .csproj)
             output_dir="$project_dir/bin/Release/netcoreapp3.1/publish"
-            
+      
             dotnet publish $project --configuration Release --output $output_dir
-            
+      
+            # Display the publish output path
+            echo "Publish output for $project_name is located at $output_dir"
+      
             # Set the project name as an output variable
-            echo "::{project}={$project_name"} >> $GITHUB_OUTPUT
+            echo "::{project}={$project_name"} >> $GITHUB_ENV
           done
 
       - name: Upload artifacts
