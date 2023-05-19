@@ -19,14 +19,10 @@ jobs:
         with:
           dotnet-version: '3.x' # Choose the appropriate .NET Core version
 
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-dotnet-${{ hashFiles('**/FHHL.sln') }}
-          restore-keys: |
-            ${{ runner.os }}-dotnet-
-            
+      - name: Debug Output Directory
+        run: |
+          ls -R ${{ steps.build-and-publish.outputs.project }}/bin/Release/netcoreapp3.1/publish
+
       - name: Build and publish projects
         run: |
           for project in $(find . -name '*.csproj'); do
