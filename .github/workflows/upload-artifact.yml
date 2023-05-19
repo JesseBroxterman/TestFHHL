@@ -7,26 +7,42 @@ on:
   workflow_dispatch
 
 jobs:
-  build:
-
+  build-and-publish:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 3.1.x
-    
-    - name: Restore dependencies
-      run: dotnet restore FHHL/FHHL.sln
-      
-    - name: Build
-      run: dotnet build FHHL/FHHL/FHHL.Web.csproj --no-restore
-      
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v3.1.2
-      with:
-        name: Test-Artifact
-        path: ${{ github.workspace }}
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.x' # Choose the appropriate .NET Core version
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-dotnet-${{ hashFiles('**/YourSolution.sln') }}
+          restore-keys: |
+            ${{ runner.os }}-dotnet-
+            
+      - name: Build and publish projects
+        run: |
+          for project in $(find . -name '*.csproj'); do
+            project_dir=$(dirname $project)
+            project_name=$(basename $project .csproj)
+            output_dir="$project_dir/bin/Release/netcoreapp3.1/publish"
+            
+            dotnet publish $project --configuration Release --output $output_dir
+            
+            # Set the project name as an output variable
+            echo "::set-output name=project::$project_name"
+          done
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ steps.build-and-publish.outputs.project }}
+          path: ${{ steps.build-and-publish.outputs.project }}/bin/Release/netcoreapp3.1/publish
+
