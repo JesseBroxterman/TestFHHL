@@ -19,39 +19,57 @@ jobs:
         with:
           dotnet-version: '3.1.x'
 
-      - name: Build and publish projects
+      - name: Determine changes
+        id: changes
         run: |
+          PREVIOUS_COMMIT=$(git rev-parse HEAD~1)
+          CHANGED_PROJECTS=""
           for project in $(find . -name '*.csproj'); do
             project_dir=$(dirname $project)
             project_name=$(basename $project .csproj)
             output_dir="$project_dir/bin/Release/netcoreapp3.1/publish"
+            
+            COMMIT_DIFF=$(git diff --name-only $PREVIOUS_COMMIT HEAD -- $project)
+            if [[ ! -z "$COMMIT_DIFF" ]]; then
+              echo "Changes found in project: $project_name"
+              CHANGED_PROJECTS="$CHANGED_PROJECTS$project_name,"
+            else
+              echo "No changes found in project: $project_name"
+            fi
+          done
+          echo "::set-output name=changed_projects::${CHANGED_PROJECTS%?}"
+
+      - name: Build and publish projects
+        if: ${{ steps.changes.outputs.changed_projects != '' }}
+        run: |
+          IFS=',' read -ra PROJECTS <<< "${{ steps.changes.outputs.changed_projects }}"
+          for project_name in "${PROJECTS[@]}"; do
+            project=$(find . -name "${project_name}.csproj")
+            project_dir=$(dirname $project)
+            output_dir="$project_dir/bin/Release/netcoreapp3.1/publish"
             dotnet publish $project --configuration Release --output $output_dir
           done
-      - name: Upload Common.Service Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: Common.Service
-          path: ./FHHL/Common.Service/bin/Release/netcoreapp3.1/publish
-      - name: Upload Common.Web Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: Common.Web
-          path: ./FHHL/Common.Web/bin/Release/netcoreapp3.1/publish
-      - name: Upload FHHL.Data Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: FHHL.Data
-          path: ./FHHL/FHHL.Data/bin/Release/netcoreapp3.1/publish
-      - name: Upload FHHL.BLL Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: FHHL.BLL
-          path: ./FHHL/FHHL.BLL/bin/Release/netcoreapp3.1/publish
-      - name: Upload FHHL Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: FHHL
-          path: ./FHHL/FHHL/bin/Release/netcoreapp3.1/publish
 
+      - name: Upload project artifacts
+        if: ${{ steps.changes.outputs.changed_projects != '' }}
+        run: |
+          IFS=',' read -ra PROJECTS <<< "${{ steps.changes.outputs.changed_projects }}"
+          for project_name in "${PROJECTS[@]}"; do
+            project_dir=$(find . -name "${project_name}.csproj" -exec dirname {} \;)
+            output_dir="$project_dir/bin/Release/netcoreapp3.1/publish"
+            echo "Uploading artifact for project: $project_name"
+            echo "Artifact path: $output_dir"
+            # Use the appropriate artifact name based on the project name
+            artifact_name="${project_name//./-}"
+            echo "::set-output name=artifact_name::$artifact_name"
+            echo "::set-output name=artifact_path::$output_dir"
+          done
+
+      - name: Upload project artifact
+        if: ${{ steps.changes.outputs.changed_projects != '' }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ needs.build-publish-upload.outputs.artifact_name }}
+          path: ${{ needs.build-publish-upload.outputs.artifact_path }}
 
 
