@@ -14,56 +14,44 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Determine changes
-        id: changes
-        run: |
-          git fetch --unshallow || echo "Repository already complete"
-          CHANGED_FILES=$(git diff HEAD~ --name-only)
-          echo "::set-output name=changed_files::$CHANGED_FILES"
-
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '3.1.x'
 
       - name: Build and publish projects
-        if: ${{ steps.changes.outputs.changed_files != '' }}
         run: |
           for project in $(find . -name '*.csproj'); do
             project_dir=$(dirname $project)
             project_name=$(basename $project .csproj)
             output_dir="$project_dir/bin/Release/netcoreapp3.1/publish"
-
             dotnet publish $project --configuration Release --output $output_dir
-
-            # Set the project name as an output variable
-            echo "::set-output name=project_name::$project_name"
-            echo "::set-output name=project_path::$output_dir"
           done
-
-      - name: Upload changed project artifacts
-        if: ${{ steps.changes.outputs.changed_files != '' }}
-        run: |
-          IFS=$'\n' read -rd '' -a changed_projects <<<"${{ steps.changes.outputs.changed_files }}"
-
-          for project in "${changed_projects[@]}"; do
-            project_name=$(basename $(dirname $project))
-            project_path="$project/bin/Release/netcoreapp3.1/publish"
-
-            echo "Uploading artifact for project: $project_name"
-            echo "Artifact path: $project_path"
-
-            # Upload the artifact for the changed project
-            echo "::set-output name=upload_project_name::$project_name"
-            echo "::set-output name=upload_project_path::$project_path"
-          done
-
-      - name: Upload project artifact
-        if: ${{ steps.upload-changed-project-artifacts.outputs.upload_project_name != '' }}
+      - name: Upload Common.Service Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ needs.build-publish-upload.outputs.upload_project_name }}
-          path: ${{ needs.build-publish-upload.outputs.upload_project_path }}
+          name: Common.Service
+          path: ./FHHL/Common.Service/bin/Release/netcoreapp3.1/publish
+      - name: Upload Common.Web Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Common.Web
+          path: ./FHHL/Common.Web/bin/Release/netcoreapp3.1/publish
+      - name: Upload FHHL.Data Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: FHHL.Data
+          path: ./FHHL/FHHL.Data/bin/Release/netcoreapp3.1/publish
+      - name: Upload FHHL.BLL Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: FHHL.BLL
+          path: ./FHHL/FHHL.BLL/bin/Release/netcoreapp3.1/publish
+      - name: Upload FHHL Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: FHHL
+          path: ./FHHL/FHHL/bin/Release/netcoreapp3.1/publish
 
 
 
