@@ -28,27 +28,53 @@ jobs:
             output_dir="$project_dir/bin/Release/netcoreapp3.1/publish"
             dotnet publish $project --configuration Release --output $output_dir
           done
+          
+      - name: Check for Changes
+        uses: dorny/paths-filter@v2
+        id: filter
+        with: 
+          filters: |
+            CommonService:
+              - 'Common.Service/**'
+            CommonWeb:
+              - 'Common.Web/**'
+            FHHLData:
+              - 'FHHL.Data/**'
+            FHHLBLL:
+              - 'FHHL.BLL/**'
+            FHHL:
+              - 'FHHL/**'
+      
       - name: Upload Common.Service Artifact
+        if: steps.filter.outputs.CommonService == 'true'
         uses: actions/upload-artifact@v2
         with:
           name: Common.Service
           path: ./FHHL/Common.Service/bin/Release/netcoreapp3.1/publish
+          
       - name: Upload Common.Web Artifact
+        if: steps.filter.outputs.CommonWeb == 'true'
         uses: actions/upload-artifact@v2
         with:
           name: Common.Web
           path: ./FHHL/Common.Web/bin/Release/netcoreapp3.1/publish
+          
       - name: Upload FHHL.Data Artifact
+        if: steps.filter.outputs.FHHLData == 'true'
         uses: actions/upload-artifact@v2
         with:
           name: FHHL.Data
           path: ./FHHL/FHHL.Data/bin/Release/netcoreapp3.1/publish
+          
       - name: Upload FHHL.BLL Artifact
+        if: steps.filter.outputs.FHHLBLL == 'true'
         uses: actions/upload-artifact@v2
         with:
           name: FHHL.BLL
           path: ./FHHL/FHHL.BLL/bin/Release/netcoreapp3.1/publish
+          
       - name: Upload FHHL Artifact
+        if: steps.filter.outputs.FHHL == 'true'
         uses: actions/upload-artifact@v2
         with:
           name: FHHL
