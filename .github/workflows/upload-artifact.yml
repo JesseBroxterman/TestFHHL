@@ -4,7 +4,10 @@
 name: builds artifact
 
 on:
-  workflow_dispatch
+  pull_request
+    branches:
+      -main
+    
 
 jobs:
   build-publish-upload:
