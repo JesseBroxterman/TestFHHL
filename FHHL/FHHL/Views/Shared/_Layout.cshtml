@@ -1,15 +1,5 @@
 ﻿@using System.IO;
-@*@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment hostingEnv
 
-@{
-    var environmentText = "";
-    var assemblyVersion = typeof(Startup).Assembly.GetName().Version?.ToString();
-    var assemblyDate = File.GetLastWriteTime(typeof(Startup).Assembly.Location).ToShortDateString();
-    if (hostingEnv.EnvironmentName != "Production")
-    {
-        environmentText += $"{assemblyDate} - {hostingEnv.EnvironmentName} - Version {assemblyVersion}";
-    }
-}*@
 
 <!DOCTYPE html>
 <html lang="en">
