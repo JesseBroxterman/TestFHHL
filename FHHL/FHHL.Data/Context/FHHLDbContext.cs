@@ -47,6 +47,8 @@ namespace FHHL.Data.Context
             builder.Seed();
 
             base.OnModelCreating(builder);
+
+            //test
         }
 
     }
