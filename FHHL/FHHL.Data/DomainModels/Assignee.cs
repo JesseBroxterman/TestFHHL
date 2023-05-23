@@ -16,5 +16,8 @@ namespace FHHL.Data.DomainModels
         public DateTimeOffset? DelDateTimeOffset { get; set; }
         public bool DelFlag { get; set; }
         public bool ActiveFlag { get; set; }
+
+
+
     }
 }
