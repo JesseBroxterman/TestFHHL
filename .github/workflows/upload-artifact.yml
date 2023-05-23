@@ -35,15 +35,15 @@ jobs:
         with: 
           filters: |
             CommonService:
-              - 'Common.Service/**'
+              - 'FHHL/Common.Service/**'
             CommonWeb:
-              - 'Common.Web/**'
+              - 'FHHL/Common.Web/**'
             FHHLData:
-              - 'FHHL.Data/**'
+              - 'FHHL/FHHL.Data/**'
             FHHLBLL:
-              - 'FHHL.BLL/**'
+              - 'FHHL/FHHL.BLL/**'
             FHHL:
-              - 'FHHL/**'
+              - 'FHHL/FHHL/**'
       
       - name: Upload Common.Service Artifact
         if: steps.filter.outputs.CommonService == 'true'
