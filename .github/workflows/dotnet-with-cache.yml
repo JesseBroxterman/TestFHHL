@@ -19,13 +19,11 @@ jobs:
       with:
         dotnet-version: 3.1.x
         
-    - uses: actions/cache@v3
+    - uses: actions/cache@v2
       id: cache-nuget
       with:
         path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.nuspec') }}
    
     - name: Restore dependencies
       if: steps.cache-nuget.outputs.cache-hit != 'true'
