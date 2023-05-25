@@ -29,7 +29,7 @@ jobs:
    
     - name: Restore dependencies
       if: steps.cache-nuget.outputs.cache-hit != 'true'
-      run: dotnet restore FHHL/FHHL.sln
+      run: dotnet restore FHHL/FHHL.sln --verbosity detailed     
       
     - name: Build
       run: dotnet build FHHL/FHHL/FHHL.Web.csproj --no-restore
