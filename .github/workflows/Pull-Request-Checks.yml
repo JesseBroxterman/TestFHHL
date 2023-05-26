@@ -13,7 +13,7 @@ on:
       -opened
 
 jobs:
-  TruffleHog:
+  TruffleHog-Check:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -28,9 +28,9 @@ jobs:
           head: HEAD
           extra_args: --debug --only-verified
           
-  build:
+  SonarCloud-Check:
     runs-on: windows-latest
-    needs: [TruffleHog]
+    needs: [TruffleHog-Check]
     defaults:
       run:
         working-directory: ./FHHL
