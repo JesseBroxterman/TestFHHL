@@ -26,7 +26,6 @@ jobs:
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.nuspec') }}
    
     - name: Restore dependencies
-      if: steps.cache-nuget.outputs.cache-hit != 'true'
       run: dotnet restore FHHL/FHHL.sln --verbosity detailed     
       
     - name: Build
