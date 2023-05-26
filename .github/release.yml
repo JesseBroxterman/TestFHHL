@@ -6,6 +6,9 @@ changelog:
     - title: New Additions
       labels:
         - enhancement
+    - title: Reports
+      labels:
+        - reports
     - title: Other Changes
       labels:
         - "*"
