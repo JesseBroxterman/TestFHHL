@@ -24,6 +24,7 @@ jobs:
           base: ${{ github.event.repository.default_branch }}
           head: HEAD
           extra_args: --debug --only-verified
+          
   build:
     runs-on: windows-latest
     needs: [TruffleHog]
@@ -56,12 +57,14 @@ jobs:
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
         restore-keys: |
           ${{ runner.os }}-nuget-
+          
     - name: Cache SonarCloud packages
       uses: actions/cache@v3
       with:
         path: ~\sonar\cache
         key: ${{ runner.os }}-sonar
         restore-keys: ${{ runner.os }}-sonar
+        
     - name: Cache SonarCloud scanner
       id: cache-sonar-scanner
       uses: actions/cache@v3
@@ -89,46 +92,3 @@ jobs:
         dotnet build -c Release
         .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
-    - name: Publish
-      run: |
-        dotnet publish ${{ github.workspace }}/FHHL/FHHL/FHHL.Web.csproj -c Release --sc --no-restore
-      
-    - name: FHHL-Dev.ExternalDrop
-      uses: actions/upload-artifact@master
-      with:
-        name: FHHL-Dev.ExternalDrop
-        path: ${{ github.workspace }}
-        retention-days: 15
-
-        if-no-files-found: error
-        
-  Devleopment:
-    name: deploy to dev environment
-    if: github.event_name == 'pull-request'
-    needs: [build]
-    runs-on: ubuntu-latest
-    environment:
-      name: Development
-      url: 'dev.sncoapps.us'
-    steps:
-      - name: deploy to azure-webapp
-        run: echo deployment steps here
-
-
-  # https://github.com/snyk/actions/tree/master/dotnet
-  security:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/dotnet@master
-        continue-on-error: true
-        #run: snyk code test --serif > snyk_sarif
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --severity-threshold=high 
-      - name: Upload result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: snyk.sarif
