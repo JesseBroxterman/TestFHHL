@@ -1,0 +1,28 @@
+name: Semantic Version Tagger
+
+env:
+  DOTNET_VERSION: '6.0.x' # SDK Version to use.
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dev
+      
+jobs:
+  SemanticVersionTagger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          
+      - name: Conventional Changelog Action
+        uses: TriPSs/conventional-changelog-action@v3
+        with:
+          github-token: ${{ secrets.github_token }}
+          skip-commit: 'true'
+          tag-prefix: 'v'
+          output-file: false
+   
