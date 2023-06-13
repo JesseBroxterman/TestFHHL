@@ -1,2 +1,2 @@
-[allowlist]
+[rules.allowlist]
   paths = ["FHHL/.sonarlint"]
