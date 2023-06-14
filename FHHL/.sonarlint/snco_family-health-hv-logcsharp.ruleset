@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RuleSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="SonarQube - Family Health HV Log SNCO-C#" Description="This rule set was automatically generated from SonarQube https://sonarcloud.io/profiles/show?key=AXpY0u6XdL_jS25ld995" ToolsVersion="14.0">
+<RuleSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="SonarQube - Family Health HV Log SNCO-C#" Description="This rule set was automatically generated from SonarQube https://sonarcloud.io/profiles/show?key=AXpY0u6XdL_jS25ld995" ToolsVersion="14.0">  #gitleaks:allow
   <Rules AnalyzerId="SonarAnalyzer.CSharp" RuleNamespace="SonarAnalyzer.CSharp">
     <Rule Id="S100" Action="Warning" />
     <Rule Id="S1006" Action="Warning" />
