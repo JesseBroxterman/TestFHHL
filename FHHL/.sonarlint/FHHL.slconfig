@@ -8,7 +8,7 @@
   "ProjectName": "Family Health HV Log",
   "Profiles": {
     "CSharp": {
-      "ProfileKey": "AXpY0u6XdL_jS25ld995",
+      "ProfileKey": "AXpY0u6XdL_jS25ld995",  #gitleaks:allow
       "ProfileTimestamp": "2021-11-12T13:57:29Z"
     }
   }
