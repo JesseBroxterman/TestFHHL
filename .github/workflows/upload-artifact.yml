@@ -31,7 +31,6 @@ jobs:
         run: dotnet build ./FHHL/FHHL/FHHL.Web.csproj --configuration Release --no-restore  
                 
       - name: Upload FHHL Artifact
-        if: steps.filter.outputs.FHHL == 'true'
         uses: actions/upload-artifact@v2
         with:
           name: FHHL
@@ -46,5 +45,4 @@ jobs:
           azure-devops-project-url: https://dev.azure.com/jessbrox809/Test-FHHL
           azure-pipeline-name: On GitHub Release - Deploy
           azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
-          artifact: FHHL
 
