@@ -5,7 +5,8 @@ name: builds artifact
 
 on:
   workflow_dispatch
-    
+  release:
+    types: [published]
 
 jobs:
   restore-build-publish:
@@ -44,4 +45,15 @@ jobs:
         with:
           name: FHHL
           path: ./FHHL/FHHL/bin/Release/netcoreapp3.1/publish
+
+  deploy:
+    needs: restore-build-publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: azure/pipelines@v2
+        with:
+          project: Test-FHHL 
+          pipeline: On GitHub Release - Deploy
+          token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
+          artifact: FHHL
 
