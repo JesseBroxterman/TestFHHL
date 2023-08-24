@@ -57,7 +57,7 @@ jobs:
     needs: restore-build-publish
     runs-on: ubuntu-latest
     steps:
-      - uses: azure/pipelines@v2
+      - uses: azure/pipelines@v1
         with:
           project: Test-FHHL 
           pipeline: On GitHub Release - Deploy
