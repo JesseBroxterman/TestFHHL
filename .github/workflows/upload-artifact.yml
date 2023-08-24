@@ -44,7 +44,7 @@ jobs:
         run: dotnet restore ./FHHL/FHHL/FHHL.Web.csproj
 
       - name: Build
-        run: dotnet build --configuration Release --no-restore  
+        run: dotnet build ./FHHL/FHHL/FHHL.Web.csproj --configuration Release --no-restore  
                 
       - name: Upload FHHL Artifact
         if: steps.filter.outputs.FHHL == 'true'
