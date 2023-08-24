@@ -41,7 +41,7 @@ jobs:
 
       - name: Restore dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: dotnet restore
+        run: dotnet restore ./FHHL/FHHL/FHHL.Web.csproj
 
       - name: Build
         run: dotnet build --configuration Release --no-restore  
