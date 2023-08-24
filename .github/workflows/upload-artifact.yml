@@ -4,9 +4,10 @@
 name: builds artifact
 
 on:
-  workflow_dispatch
   release:
-    types: [published]
+    types:
+      - published
+  workflow_dispatch:
 
 jobs:
   restore-build-publish:
