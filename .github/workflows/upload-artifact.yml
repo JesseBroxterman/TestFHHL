@@ -29,18 +29,8 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '3.1.x'
-
-      - name: Cache .NET Core dependencies
-        id: cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-dotnet-packages-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-dotnet-packages-
-
+          
       - name: Restore dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
         run: dotnet restore ./FHHL/FHHL/FHHL.Web.csproj
 
       - name: Build
