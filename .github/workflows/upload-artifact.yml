@@ -32,11 +32,6 @@ jobs:
 
       - name: Display Files
         run: |
-          ls
-          ls ./FHHL
-          ls ./FHHL/FHHL
-          ls ./FHHL/FHHL/bin
-          ls ./FHHL/FHHL/bin/Release
           ls ./FHHL/FHHL/bin/Release/netcoreapp3.1
                 
       - name: Upload FHHL Artifact
