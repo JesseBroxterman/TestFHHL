@@ -33,10 +33,10 @@ jobs:
       - name: Display Files
         run: |
           ls
-          ls /FHHL
-          ls /FHHL/bin
-          ls /FHHL/bin/Release
-          ls /FHHL/bin/Release/netcoreapp3.1
+          ls ./FHHL
+          ls ./FHHL/bin
+          ls ./FHHL/bin/Release
+          ls ./FHHL/bin/Release/netcoreapp3.1
                 
       - name: Upload FHHL Artifact
         uses: actions/upload-artifact@v2
