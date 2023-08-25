@@ -38,7 +38,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: FHHL
-          path: ./FHHL/FHHL/bin/Release/netcoreapp3.1/publish
+          path: ./FHHL/FHHL/bin/Release/netcoreapp3.1/win-x64
 
   deploy:
     needs: restore-build-publish
