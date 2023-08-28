@@ -2,7 +2,7 @@ name: release-AzureDevOps-trigger
 
 on:
   release:
-    - published
+    types: [published]
   workflow_dispatch:
 
 jobs:
