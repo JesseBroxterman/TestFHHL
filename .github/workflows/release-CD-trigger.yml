@@ -1,4 +1,4 @@
-name: dev - build and trigger Azure to retrieve
+name: release-AzureDevOps-trigger
 
 on:
   release:
