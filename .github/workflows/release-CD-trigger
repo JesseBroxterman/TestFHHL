@@ -1,0 +1,16 @@
+name: dev - build and trigger Azure to retrieve
+
+on:
+  release:
+    - published
+  workflow_dispatch:
+
+jobs:
+  trigger-AzureDevOps:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: azure/pipelines@v1
+        with:
+          azure-devops-project-url: https://dev.azure.com/jessbrox809/Test-FHHL
+          azure-pipeline-name: Release - CD
+          azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
