@@ -4,10 +4,10 @@
 name: dev - build and trigger Azure to retrieve
 
 on:
-  # push:
-    # branches:
-      # - dev
-  workflow_dispatch:
+   push:
+     branches:
+       - dev
+   workflow_dispatch:
 
 jobs:
   restore-build-publish:
