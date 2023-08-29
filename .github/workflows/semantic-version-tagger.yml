@@ -1,28 +1,47 @@
-name: Semantic Version Tagger
-
-env:
-  DOTNET_VERSION: '6.0.x' # SDK Version to use.
-
+name: Increment semantic version
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - dev
-      
+  pull_request:
+    types:
+      - closed  
 jobs:
-  SemanticVersionTagger:
+  increment-version:
+    if: github.event.pull_request.merged == true
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      
+      - name: Get Set Inputs
+        run: |
+          echo "CURRENT_VERSION=$(git describe --tags --abbrev=0)" >> "$GITHUB_ENV"
+          echo "PR_LABELS_STRING=${{ join(github.event.pull_request.labels.*.name) }}" >> "$GITHUB_ENV"
           
-      - name: Conventional Changelog Action
-        uses: TriPSs/conventional-changelog-action@v3
+      - name: Check Inputs
+        run: |
+          echo "$CURRENT_VERSION"
+          echo "$PR_LABELS_STRING"
+      
+      - name: Increment Version
+        id: increment-version
+        uses: JesseBroxterman/semantic-version-increment@v2.0.4
         with:
-          github-token: ${{ secrets.github_token }}
-          skip-commit: 'true'
-          tag-prefix: 'v'
-          output-file: false
-   
+          current_version: ${{ env.CURRENT_VERSION }}
+          pr_labels: ${{ env.PR_LABELS_STRING }}
+          
+      - name: Check Output
+        run: echo "${{ steps.increment-version.outputs.new_version }}"
+        
+      - name: Add New Tag
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${{ steps.increment-version.outputs.new_version }}',
+              sha: context.sha
+            })  
